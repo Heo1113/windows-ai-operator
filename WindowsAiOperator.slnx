@@ -4,8 +4,10 @@
     <Project Path="src/WindowsAiOperator.ModelProviders/WindowsAiOperator.ModelProviders.csproj" />
     <Project Path="src/WindowsAiOperator.Storage/WindowsAiOperator.Storage.csproj" />
     <Project Path="src/WindowsAiOperator.Automation.Windows/WindowsAiOperator.Automation.Windows.csproj" />
+    <Project Path="src/WindowsAiOperator.TestTarget/WindowsAiOperator.TestTarget.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/WindowsAiOperator.Tests/WindowsAiOperator.Tests.csproj" />
+    <Project Path="tests/WindowsAiOperator.UiaTests/WindowsAiOperator.UiaTests.csproj" />
   </Folder>
 </Solution>
