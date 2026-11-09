@@ -313,9 +313,12 @@ public sealed class PolicyEngine
                     return PolicyDecision.Deny("화면 인식(비전)이 켜져 있지 않아 좌표 클릭을 하지 않습니다.");
                 }
 
-                if (settings.RequireApprovalForCoordinateClicks || step.Confidence is < 0.8)
+                // Even with the setting off, a low or missing confidence means the image analysis is not good enough to click unseen.
+                if (settings.RequireApprovalForCoordinateClicks || step.Confidence is not >= 0.8)
                 {
-                    Require(RiskCategory.CoordinateClick);
+                    Require(RiskCategory.CoordinateClick, settings.RequireApprovalForCoordinateClicks
+                        ? null
+                        : step.Confidence is { } c ? $"모델의 위치 확신도가 낮습니다({c:0.00})." : "모델이 위치 확신도를 주지 않았습니다.");
                 }
 
                 break;

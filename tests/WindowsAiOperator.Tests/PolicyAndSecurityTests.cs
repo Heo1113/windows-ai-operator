@@ -35,6 +35,24 @@ public sealed class PolicyEngineTests
         });
     }
 
+    [Theory]
+    [InlineData(true, ",\"confidence\":0.95", PolicyVerdict.RequireApproval)]
+    [InlineData(false, ",\"confidence\":0.95", PolicyVerdict.Allow)]
+    [InlineData(false, ",\"confidence\":0.5", PolicyVerdict.RequireApproval)]
+    [InlineData(false, "", PolicyVerdict.RequireApproval)]
+    public void Coordinate_clicks_need_approval_unless_turned_off_and_confident(bool setting, string confidence, PolicyVerdict expected)
+    {
+        var step = TestSupport.Plan("{\"steps\":[{\"action\":\"click_point\",\"window\":{\"app\":\"test-target\"},\"point\":{\"x\":500,\"y\":500}" + confidence + "}]}", allowClickPoint: true).Steps[0];
+        var settings = TestSupport.Settings(s => s.RequireApprovalForCoordinateClicks = setting);
+        var window = Window();
+        var input = new PolicyInput
+        {
+            Step = step, Settings = settings, App = settings.FindAppForProcess(window.ProcessName), Window = window, OwnProcessId = 4242, VisionActive = true,
+        };
+        Assert.Equal(expected, Engine.Evaluate(input).Verdict);
+        Assert.Equal(PolicyVerdict.Deny, Engine.Evaluate(input with { VisionActive = false }).Verdict);
+    }
+
     [Fact]
     public void Ordinary_click_is_allowed()
     {

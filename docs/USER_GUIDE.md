@@ -31,7 +31,7 @@
 | select_menu | 메뉴 경로 선택(예: 도구 › 대화상자 열기) | 마지막 항목이 위험하면 예 |
 | scroll | 스크롤 | 아니오 |
 | hotkey | 단축키. Ctrl+Z·Ctrl+C·Ctrl+A·Tab·Esc 등만 바로 실행, Enter·Delete·Ctrl+S·Alt+F4 등은 승인, Win 키·Alt+Tab·Ctrl+Alt+Del은 거부 | 표에 따름 |
-| click_point | (비전 전용) 스크린샷 기준 좌표 클릭 | 항상(미리보기 포함) |
+| click_point | (비전 전용) 스크린샷 기준 좌표 클릭 | 기본 예(미리보기 포함). '좌표 클릭은 승인'을 꺼도 위치 확신도가 0.8 미만이거나 없으면 예 |
 | list_directory | 허용 폴더의 목록(이름·크기·날짜) | 아니오(파일 내용은 읽지 않음) |
 | wait / ask_user / finish | 대기, 사용자에게 질문, 결과 보고 | — |
 
