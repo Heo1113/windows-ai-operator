@@ -95,6 +95,8 @@ public sealed class PolicyEngineTests
         Assert.Contains(RiskCategory.NewlineMaySubmit, Evaluate("""{"action":"set_text","element":{"name":"x"},"text":"a\nb"}""", Element("검색", "Edit", patterns: UiPatterns.None)).Categories);
         Assert.Equal(PolicyVerdict.Allow, Evaluate("""{"action":"set_text","element":{"name":"x"},"text":"a\nb"}""", Element("메모", "Edit", patterns: UiPatterns.Value, className: "TextBox")).Verdict);
         Assert.Contains(RiskCategory.ReplaceExistingContent, Evaluate("""{"action":"set_text","element":{"name":"x"},"text":"새 내용"}""", Element("문서", "Document", patterns: UiPatterns.Value), currentValue: new string('x', 500)).Categories);
+        Assert.Contains(RiskCategory.ReplaceExistingContent, Evaluate("""{"action":"set_text","element":{"name":"x"},"text":"새 내용"}""", Element("편집기", "Document", patterns: UiPatterns.Text)).Categories);
+        Assert.Equal(PolicyVerdict.Allow, Evaluate("""{"action":"set_text","element":{"name":"x"},"text":"덧붙임","mode":"append"}""", Element("편집기", "Document", patterns: UiPatterns.Text)).Verdict);
     }
 
     [Fact]

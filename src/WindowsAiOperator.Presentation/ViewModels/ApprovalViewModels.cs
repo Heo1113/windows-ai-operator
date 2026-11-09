@@ -53,8 +53,9 @@ public sealed partial class ApprovalViewModel : ObservableObject, IDisposable
     };
 
     public byte[]? PreviewPng => Request.Preview?.Png;
-    public double? PreviewX => Request.PreviewPoint?.X;
-    public double? PreviewY => Request.PreviewPoint?.Y;
+    /// <summary>Marker position in image pixels (0 when there is no preview; the preview is hidden then).</summary>
+    public double PreviewX => Request.PreviewPoint?.X ?? 0;
+    public double PreviewY => Request.PreviewPoint?.Y ?? 0;
     public bool HasPreview => Request.Preview is not null;
 
     [ObservableProperty]

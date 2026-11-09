@@ -255,6 +255,12 @@ public sealed class PolicyEngine
                 {
                     Require(RiskCategory.ReplaceExistingContent, $"기존 내용 {input.CurrentValue.Length}자를 새 내용으로 바꿉니다.");
                 }
+                else if (step.Mode == SetTextMode.Replace && typedByKeyboard && input.CurrentValue is null
+                         && string.Equals(element!.ControlType, "Document", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Without a readable value the keyboard path selects everything (Ctrl+A) before typing: the whole document could be replaced.
+                    Require(RiskCategory.ReplaceExistingContent, "문서의 기존 내용을 읽을 수 없어, 전체를 새 내용으로 바꾸기 전에 확인합니다(덧붙이려면 append).");
+                }
 
                 break;
 
