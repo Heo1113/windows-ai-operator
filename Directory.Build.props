@@ -14,5 +14,9 @@
     <!-- Builds the Windows-only projects (WPF, FlaUI) on non-Windows machines too (compile only). -->
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!-- NuGet package pruning (on by default for .NET 10) fails during restore on SDK 10.0.4xx with the RID-specific
+         graphs of the WPF app and wao that use FlaUI ("The given key '(Interop.UIAutomationClient, 10.19041.0)' was not
+         present"). Pruning is only an optimization; every package version stays pinned in Directory.Packages.props. -->
+    <RestoreEnablePackagePruning>false</RestoreEnablePackagePruning>
   </PropertyGroup>
 </Project>

@@ -65,7 +65,10 @@ public partial class App : Application
         IDesktopAutomation desktop;
         try
         {
-            desktop = Options.MockDesktop ? MockDesktop.CreateDemo() : new FlaUiDesktop(_log);
+            // UI Automation is created on a thread-pool (MTA) thread, as Microsoft recommends for UIA clients, so tree reads
+            // and actions from background threads never route through the WPF UI thread.
+            var log = _log;
+            desktop = Options.MockDesktop ? MockDesktop.CreateDemo() : await Task.Run(() => new FlaUiDesktop(log));
         }
         catch (Exception ex) when (ex is System.Runtime.InteropServices.COMException or InvalidOperationException or TypeInitializationException)
         {
