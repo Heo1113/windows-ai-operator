@@ -6,6 +6,8 @@
     <Project Path="src/WindowsAiOperator.Presentation/WindowsAiOperator.Presentation.csproj" />
     <Project Path="src/WindowsAiOperator.Automation.Windows/WindowsAiOperator.Automation.Windows.csproj" />
     <Project Path="src/WindowsAiOperator.TestTarget/WindowsAiOperator.TestTarget.csproj" />
+    <Project Path="src/WindowsAiOperator.App/WindowsAiOperator.App.csproj" />
+    <Project Path="src/WindowsAiOperator.Cli/WindowsAiOperator.Cli.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/WindowsAiOperator.Tests/WindowsAiOperator.Tests.csproj" />

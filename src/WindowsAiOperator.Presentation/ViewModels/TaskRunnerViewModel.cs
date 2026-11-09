@@ -237,7 +237,11 @@ public sealed partial class TaskRunnerViewModel : PageViewModel, IApprovalHandle
     }
 
     /// <summary>One step chosen by hand in the inspector, through the same policy, approval and journal.</summary>
-    public async Task<TaskRun?> RunManualStepAsync(PlanStep step, string description)
+    public Task<TaskRun?> RunManualStepAsync(PlanStep step, string description) =>
+        RunStaticPlanAsync(TaskService.SingleStep(step), $"[직접 조작] {description}", TaskSource.Manual);
+
+    /// <summary>A fixed plan (no model) through the same executor, policy, approval and journal.</summary>
+    public async Task<TaskRun?> RunStaticPlanAsync(TaskPlan plan, string request, TaskSource source)
     {
         if (IsRunning)
         {
@@ -245,9 +249,9 @@ public sealed partial class TaskRunnerViewModel : PageViewModel, IApprovalHandle
             return null;
         }
 
-        RequestText = $"[직접 조작] {description}";
-        var run = new TaskRun { Request = RequestText, Source = TaskSource.Manual, IsMockDesktop = _context.Desktop.IsMock, ModelLabel = "직접 조작(모델 없음)" };
-        await ExecuteAsync(run, new StaticPlanSource(TaskService.SingleStep(step), "직접 조작")).ConfigureAwait(true);
+        RequestText = request;
+        var run = new TaskRun { Request = request, Source = source, IsMockDesktop = _context.Desktop.IsMock, ModelLabel = "고정 계획(모델 없음)" };
+        await ExecuteAsync(run, new StaticPlanSource(plan, "고정 계획")).ConfigureAwait(true);
         return run;
     }
 
