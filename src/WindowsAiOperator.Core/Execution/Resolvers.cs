@@ -137,6 +137,14 @@ public sealed class ElementResolver(IDesktopAutomation desktop)
             return new ElementResolution(usable[0], null, $"{matches.Count}개 중 보이고 활성화된 1개");
         }
 
+        // Some frameworks expose one on-screen item twice (e.g. a WPF combo box item under the combo box and its popup).
+        // Identical type, name, id and rectangle means the same thing on screen; anything else stays ambiguous.
+        var candidates = usable.Count > 0 ? usable : matches.ToList();
+        if (candidates.Select(m => (m.ControlType, m.Name, m.AutomationId, m.Bounds)).Distinct().Count() == 1 && !candidates[0].Bounds.IsEmpty)
+        {
+            return new ElementResolution(candidates[0], null, $"같은 화면 요소가 UIA에 {candidates.Count}번 노출되어 첫 번째를 사용");
+        }
+
         var sample = string.Join(", ", matches.Take(4).Select(m => m.Describe()));
         return new ElementResolution(null, ExecutionErrorKind.ElementAmbiguous,
             $"조건에 맞는 요소가 {matches.Count}개라 하나로 정할 수 없습니다(index나 automation_id 필요): {Security.Redactor.OneLine(sample, 200)}");

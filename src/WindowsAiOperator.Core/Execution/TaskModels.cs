@@ -126,6 +126,10 @@ public sealed class StepRecord
     /// <summary>Value read by read_element (shown to the user, redacted when stored).</summary>
     public string? ReadValue { get; set; }
 
+    /// <summary>The allow-listed app and element the step actually used (stable selectors for saving as a workflow).</summary>
+    public string? ResolvedAppId { get; set; }
+    public Planning.ElementFingerprint? ResolvedElement { get; set; }
+
     public bool ChangesState => Step.Action.ChangesState();
 }
 

@@ -244,8 +244,9 @@ public sealed class PolicyEngine
                     Require(RiskCategory.Credentials, "인증정보 입력란으로 보이는 요소에 입력합니다.");
                 }
 
-                if (text.Contains('\n') && element is not null && !string.Equals(element.ControlType, "Document", StringComparison.OrdinalIgnoreCase)
-                    && !string.Equals(element.ClassName, "Edit", StringComparison.OrdinalIgnoreCase))
+                // A writable ValuePattern inserts line breaks as text; only keyboard typing turns them into Enter key presses.
+                var typedByKeyboard = element is not null && !(element.Supports(UiPatterns.Value) && element.IsReadOnly != true);
+                if (text.Contains('\n') && typedByKeyboard && !string.Equals(element!.ControlType, "Document", StringComparison.OrdinalIgnoreCase))
                 {
                     Require(RiskCategory.NewlineMaySubmit);
                 }

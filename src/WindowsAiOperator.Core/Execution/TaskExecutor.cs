@@ -359,6 +359,7 @@ public sealed partial class TaskExecutor
         }
 
         state.CurrentWindow = window.Handle;
+        record.ResolvedAppId = access.App?.Id;
         SafeNotify(() => _observer.StepChanged(run, record));
 
         if (step.Action == ActionType.Observe)
@@ -379,6 +380,7 @@ public sealed partial class TaskExecutor
 
             element = elementResolution.Element!;
             record.TargetElement = Redactor.OneLine(element.Describe(), 120);
+            record.ResolvedElement = ElementFingerprint.From(element);
             SafeNotify(() => _observer.StepChanged(run, record));
         }
         else if (ActionCatalog.Get(step.Action).NeedsElement)
@@ -704,6 +706,7 @@ public sealed partial class TaskExecutor
 
         state.CurrentWindow = result.WindowHandle;
         state.Launched.Add(result.WindowHandle);
+        record.ResolvedAppId = app.Id;
         var window = _desktop.GetWindow(result.WindowHandle);
         record.TargetWindow = window is null ? null : Redactor.OneLine(window.Title, 120);
         run.TargetApp ??= app.Id;
