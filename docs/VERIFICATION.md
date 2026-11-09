@@ -26,7 +26,7 @@
 ## 2. 실제 Windows UI Automation 테스트 (Windows CI)
 
 `dotnet test --project tests/WindowsAiOperator.UiaTests` — 별도 테스트 앱(`OperatorTestTarget.exe`)과 메모장을 실제 UIA3(FlaUI)로 조작. **11개 모두 통과**
-(CI 실행 #3, #5, #6, #7). 처음 실행에서 실패한 2개(WPF 콤보 항목이 UIA에 두 번 노출, 여러 줄 입력의 줄바꿈 규칙)를 고쳐 통과했습니다.
+(CI 실행 #3, #5~#7, #9). 처음 실행에서 실패한 2개(WPF 콤보 항목이 UIA에 두 번 노출, 여러 줄 입력의 줄바꿈 규칙)를 고쳐 통과했습니다.
 
 | 테스트 | 확인한 것 |
 |---|---|
@@ -85,15 +85,15 @@
 
 ## 6. CI 실행 결과
 
-최종 확인: **CI 실행 #7** (커밋 `0b18443`, 2026-11-09) — Linux·Windows 작업 모두 성공.
+최종 확인: **CI 실행 #9** (커밋 `2addb5b`, 2026-11-09) — Linux·Windows 작업 모두 성공.
 Windows 러너는 GitHub Actions `windows-latest`(Windows Server 2025 Datacenter 10.0.26100, 이미지 windows-2025-vs2026)이고,
 스모크 보고서에 기록된 화면은 96 DPI(배율 100%), 주 화면 1024x768 DIP, 전체 화면 1024x768 DIP, UI 언어 en-US입니다.
 
 | 단계 | 결과 |
 |---|---|
-| Linux: 빌드(WPF XAML 컴파일 포함)·단위 테스트 | 150개 통과(실패 0, 건너뜀 0) |
+| Linux: 빌드(WPF XAML 컴파일 포함)·단위 테스트 | 154개 통과(실패 0, 건너뜀 0) |
 | Windows: 빌드 | 경고 0, 오류 0(경고를 오류로 처리) |
-| Windows: 단위 테스트 | 150개 통과(실패 0, 건너뜀 0) |
+| Windows: 단위 테스트 | 154개 통과(실패 0, 건너뜀 0) |
 | Windows: 실제 UIA 테스트 | 11개 통과(실패 0, 건너뜀 0) |
 | 포터블 패키지 | `WindowsAiOperator.exe` 68.3 MB, `wao.exe` 48.7 MB, `OperatorTestTarget.exe` 58.8 MB(자체 포함 단일 파일, 각 SHA-256), zip 160.1 MB |
 | GUI 스모크 mock | 8개 화면을 작업 전·후 두 번 방문, 바인딩 오류·UI 예외 0. MOCK 모델의 자연어 요청 → MOCK 데스크톱의 가상 메모장 입력 완료. '선택 항목 삭제' 승인 거부 → 실행 안 됨(앞 단계의 목록 선택만 실행되어 '부분 완료'). 백업 2개·무결성 ok |
@@ -111,7 +111,9 @@ Windows 러너는 GitHub Actions `windows-latest`(Windows Server 2025 Datacenter
 | #3 | 성공 | GUI 앱 추가 전 단계 |
 | #4 | 실패 | .NET SDK 10.0.4xx의 NuGet 패키지 정리(pruning) 복원 오류(NU1510, Interop.UIAutomationClient) → 패키지 정리 끔 |
 | #5 | 실패 | GUI 스모크: 승인 창 클릭 미리보기 위치의 바인딩 오류(null → Canvas.Left) → 값 형식 수정 |
-| #6, #7 | 성공 | 전체 통과(#7은 스모크 보고서에 화면·언어 정보 기록 추가) |
+| #6, #7 | 성공 | 전체 통과(#7에서 스모크 보고서에 화면·언어 정보 기록 추가) |
+| #8 | 취소 | 문서만 바꾼 커밋. 바로 다음 푸시로 같은 브랜치의 이전 실행을 취소하는 설정(concurrency) 때문에 중간에 취소됨 |
+| #9 | 성공 | 좌표 클릭 확신도 규칙 수정·테스트 4개 추가 후 전체 통과 |
 
 ## 7. 사용자 PC에서 확인할 것 (미검증)
 
