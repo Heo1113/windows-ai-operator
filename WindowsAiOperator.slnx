@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/WindowsAiOperator.Core/WindowsAiOperator.Core.csproj" />
+    <Project Path="src/WindowsAiOperator.ModelProviders/WindowsAiOperator.ModelProviders.csproj" />
+    <Project Path="src/WindowsAiOperator.Storage/WindowsAiOperator.Storage.csproj" />
+    <Project Path="src/WindowsAiOperator.Presentation/WindowsAiOperator.Presentation.csproj" />
+    <Project Path="src/WindowsAiOperator.Automation.Windows/WindowsAiOperator.Automation.Windows.csproj" />
+    <Project Path="src/WindowsAiOperator.TestTarget/WindowsAiOperator.TestTarget.csproj" />
+    <Project Path="src/WindowsAiOperator.App/WindowsAiOperator.App.csproj" />
+    <Project Path="src/WindowsAiOperator.Cli/WindowsAiOperator.Cli.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/WindowsAiOperator.Tests/WindowsAiOperator.Tests.csproj" />
+    <Project Path="tests/WindowsAiOperator.UiaTests/WindowsAiOperator.UiaTests.csproj" />
+  </Folder>
+</Solution>
