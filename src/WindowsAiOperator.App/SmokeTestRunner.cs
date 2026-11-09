@@ -95,6 +95,7 @@ internal sealed class SmokeTestRunner
 
         _failures.AddRange(_bindings.Errors.Select(e => "binding error: " + e));
         var status = _context.Store.GetStatus();
+        var dpi = VisualTreeHelper.GetDpi(_window);
         var report = new
         {
             app = $"{AppInfo.ProductName} {AppInfo.Version}",
@@ -103,6 +104,16 @@ internal sealed class SmokeTestRunner
             realUia = _options.RealUiaSmoke && !_context.Desktop.IsMock,
             dataDirectory = _context.Paths.DataDirectory,
             durationSeconds = Math.Round(stopwatch.Elapsed.TotalSeconds, 1),
+            // What the screens were rendered at, so the report says which DPI and language were (and were not) covered.
+            display = new
+            {
+                os = Environment.OSVersion.VersionString,
+                uiLanguage = System.Globalization.CultureInfo.InstalledUICulture.Name,
+                windowDpi = dpi.PixelsPerInchX,
+                scalePercent = Math.Round(dpi.DpiScaleX * 100),
+                primaryScreenDip = $"{SystemParameters.PrimaryScreenWidth:0}x{SystemParameters.PrimaryScreenHeight:0}",
+                virtualScreenDip = $"{SystemParameters.VirtualScreenWidth:0}x{SystemParameters.VirtualScreenHeight:0}",
+            },
             pages = _main.Pages.Select(p => p.Key).ToArray(),
             screenshots = _screenshots,
             results = _results,
