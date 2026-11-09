@@ -16,5 +16,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\WindowsAiOperator.Core\WindowsAiOperator.Core.csproj" />
+    <ProjectReference Include="..\..\src\WindowsAiOperator.ModelProviders\WindowsAiOperator.ModelProviders.csproj" />
   </ItemGroup>
 </Project>
