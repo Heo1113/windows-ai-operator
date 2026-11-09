@@ -8,7 +8,7 @@ namespace WindowsAiOperator.ModelProviders;
 /// readable problem instead of a client; the app keeps working without a model.</summary>
 public static class ModelClientFactory
 {
-    public static (IModelClient? Client, string? Problem) Create(ModelProfile profile, ISecretStore secrets, ProbeResult? lastProbe, HttpMessageHandler? handler = null, IOperatorLog? log = null)
+    public static (IModelClient? Client, string? Problem) Create(ModelProfile profile, ISecretStore secrets, ProbeResult? lastProbe, HttpMessageHandler? handler = null, IOperatorLog? log = null, ResponseFormatKind? knownFormatCeiling = null)
     {
         if (profile.Kind == ProviderKind.Mock)
         {
@@ -45,7 +45,7 @@ public static class ModelClientFactory
             MaxTokens = profile.MaxTokens,
             Temperature = profile.Temperature,
         };
-        return (new OpenAiCompatibleClient(profile, key, descriptor, handler, log), null);
+        return (new OpenAiCompatibleClient(profile, key, descriptor, handler, log, knownFormatCeiling: knownFormatCeiling), null);
     }
 
     /// <summary>Client for the image test only: the pictures are synthetic, so they may be sent before vision is confirmed.</summary>

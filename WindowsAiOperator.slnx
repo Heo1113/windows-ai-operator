@@ -3,6 +3,7 @@
     <Project Path="src/WindowsAiOperator.Core/WindowsAiOperator.Core.csproj" />
     <Project Path="src/WindowsAiOperator.ModelProviders/WindowsAiOperator.ModelProviders.csproj" />
     <Project Path="src/WindowsAiOperator.Storage/WindowsAiOperator.Storage.csproj" />
+    <Project Path="src/WindowsAiOperator.Presentation/WindowsAiOperator.Presentation.csproj" />
     <Project Path="src/WindowsAiOperator.Automation.Windows/WindowsAiOperator.Automation.Windows.csproj" />
     <Project Path="src/WindowsAiOperator.TestTarget/WindowsAiOperator.TestTarget.csproj" />
   </Folder>

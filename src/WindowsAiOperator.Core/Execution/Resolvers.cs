@@ -78,7 +78,8 @@ public sealed class WindowResolver(IDesktopAutomation desktop)
 /// </summary>
 public sealed class ElementResolver(IDesktopAutomation desktop)
 {
-    public ElementResolution Resolve(long windowHandle, ElementSelector selector, ElementRegistry registry, CancellationToken cancellationToken)
+    /// <param name="preferredPatterns">Patterns the action needs; used only to choose between copies of the same on-screen element.</param>
+    public ElementResolution Resolve(long windowHandle, ElementSelector selector, ElementRegistry registry, CancellationToken cancellationToken, UiPatterns preferredPatterns = UiPatterns.None)
     {
         var query = selector.ToQuery();
         if (selector.Ref is not null)
@@ -142,7 +143,8 @@ public sealed class ElementResolver(IDesktopAutomation desktop)
         var candidates = usable.Count > 0 ? usable : matches.ToList();
         if (candidates.Select(m => (m.ControlType, m.Name, m.AutomationId, m.Bounds)).Distinct().Count() == 1 && !candidates[0].Bounds.IsEmpty)
         {
-            return new ElementResolution(candidates[0], null, $"같은 화면 요소가 UIA에 {candidates.Count}번 노출되어 첫 번째를 사용");
+            var best = candidates.FirstOrDefault(c => preferredPatterns == UiPatterns.None || (c.Patterns & preferredPatterns) != 0) ?? candidates[0];
+            return new ElementResolution(best, null, $"같은 화면 요소가 UIA에 {candidates.Count}번 노출되어 필요한 조작을 지원하는 것을 사용");
         }
 
         var sample = string.Join(", ", matches.Take(4).Select(m => m.Describe()));

@@ -27,8 +27,9 @@ public sealed class OpenAiCompatibleClient : IModelClient, IDisposable
     private readonly bool _allowImages;
     private ResponseFormatKind? _formatCeiling;
 
-    public OpenAiCompatibleClient(ModelProfile profile, string? apiKey, ModelDescriptor descriptor, HttpMessageHandler? handler = null, IOperatorLog? log = null, bool allowImagesRegardless = false)
+    public OpenAiCompatibleClient(ModelProfile profile, string? apiKey, ModelDescriptor descriptor, HttpMessageHandler? handler = null, IOperatorLog? log = null, bool allowImagesRegardless = false, ResponseFormatKind? knownFormatCeiling = null)
     {
+        _formatCeiling = knownFormatCeiling;
         _profile = profile;
         _apiKey = apiKey;
         Descriptor = descriptor;

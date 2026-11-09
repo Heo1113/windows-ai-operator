@@ -370,7 +370,7 @@ public sealed partial class TaskExecutor
         ElementInfo? element = null;
         if (step.Element is not null)
         {
-            var elementResolution = await ResolveElementAsync(window.Handle, step.Element, state, step.Action == ActionType.WaitFor ? TimeSpan.FromMilliseconds(step.TimeoutMs ?? (int)stepTimeout.TotalMilliseconds) : stepTimeout, token).ConfigureAwait(false);
+            var elementResolution = await ResolveElementAsync(window.Handle, step.Element, state, step.Action == ActionType.WaitFor ? TimeSpan.FromMilliseconds(step.TimeoutMs ?? (int)stepTimeout.TotalMilliseconds) : stepTimeout, token, step.Action).ConfigureAwait(false);
             if (!elementResolution.Found)
             {
                 var stillThere = _desktop.GetWindow(window.Handle) is not null;
@@ -763,12 +763,22 @@ public sealed partial class TaskExecutor
         }
     }
 
-    private async Task<ElementResolution> ResolveElementAsync(long windowHandle, ElementSelector selector, RunState state, TimeSpan timeout, CancellationToken token)
+    private async Task<ElementResolution> ResolveElementAsync(long windowHandle, ElementSelector selector, RunState state, TimeSpan timeout, CancellationToken token, ActionType action = ActionType.ReadElement)
     {
+        var preferred = action switch
+        {
+            ActionType.Click => UiPatterns.Invoke | UiPatterns.Toggle | UiPatterns.SelectionItem | UiPatterns.ExpandCollapse,
+            ActionType.SetText => UiPatterns.Value,
+            ActionType.Toggle => UiPatterns.Toggle,
+            ActionType.Select => UiPatterns.SelectionItem,
+            ActionType.Expand or ActionType.Collapse => UiPatterns.ExpandCollapse,
+            ActionType.Scroll => UiPatterns.Scroll,
+            _ => UiPatterns.None,
+        };
         var deadline = DateTimeOffset.UtcNow + timeout;
         while (true)
         {
-            var resolution = _elements.Resolve(windowHandle, selector, state.Registry, token);
+            var resolution = _elements.Resolve(windowHandle, selector, state.Registry, token, preferred);
             if (resolution.Found || resolution.Error == ExecutionErrorKind.ElementAmbiguous || DateTimeOffset.UtcNow >= deadline)
             {
                 return resolution;
