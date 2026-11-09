@@ -63,6 +63,7 @@ public sealed class OperatorContext : IDisposable
         Tasks = new TaskService(this);
         TryAutoBackup();
         TryApplyRetention();
+        TryCleanScreenshots();
         log.Info("app", $"started v{AppInfo.Version}, desktop={desktop.Name}, data={paths.DataDirectory}, recovered={Recovered.Count}");
     }
 
@@ -120,6 +121,30 @@ public sealed class OperatorContext : IDisposable
         catch (Exception ex) when (ex is IOException or InvalidOperationException or Microsoft.Data.Sqlite.SqliteException)
         {
             Log.Warn("backup", "automatic backup failed", ex);
+        }
+    }
+
+    private void TryCleanScreenshots()
+    {
+        try
+        {
+            if (!Directory.Exists(Paths.ScreenshotDirectory))
+            {
+                return;
+            }
+
+            var cutoff = DateTime.Now.AddDays(-Settings.General.ScreenshotRetentionDays);
+            foreach (var folder in Directory.EnumerateDirectories(Paths.ScreenshotDirectory))
+            {
+                if (Directory.GetLastWriteTime(folder) < cutoff)
+                {
+                    Directory.Delete(folder, recursive: true);
+                }
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            Log.Warn("screenshots", "old screenshots could not be removed", ex);
         }
     }
 
@@ -296,9 +321,27 @@ public sealed class TaskService(OperatorContext context)
 
     public async Task<TaskRun> RunAsync(TaskRun run, IPlanSource source, IApprovalHandler approvals, ITaskObserver observer, ExecutionControl control, CancellationToken cancellationToken)
     {
+        var options = context.Settings.General.SaveScreenshots
+            ? ExecutorOptions with { ScreenshotSink = SaveScreenshot }
+            : ExecutorOptions with { ScreenshotSink = null };
         var executor = new TaskExecutor(context.Desktop, context.Policy, approvals,
-            new CompositeTaskObserver(new TaskJournal(context.Store, context.Log), observer), context.Log, ExecutorOptions);
+            new CompositeTaskObserver(new TaskJournal(context.Store, context.Log), observer), context.Log, options);
         return await executor.RunAsync(run, source, context.Settings.Safety, control, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Saves a vision screenshot under screenshots\&lt;task id&gt;\ (only when the user turned this on in Settings).</summary>
+    private void SaveScreenshot(TaskRun run, ScreenImage image)
+    {
+        try
+        {
+            var folder = Path.Combine(context.Paths.ScreenshotDirectory, run.Id.ToString("N"));
+            Directory.CreateDirectory(folder);
+            File.WriteAllBytes(Path.Combine(folder, $"{DateTime.Now:HHmmss-fff}-window-{image.WindowHandle}.png"), image.Png);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            context.Log.Warn("screenshots", "saving a screenshot failed", ex);
+        }
     }
 
     /// <summary>A single step chosen by the user in the inspector, through the same policy and approval path.</summary>

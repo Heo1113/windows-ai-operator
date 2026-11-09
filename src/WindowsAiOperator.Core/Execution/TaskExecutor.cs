@@ -908,6 +908,7 @@ public sealed partial class TaskExecutor
                     if (screenshot is not null)
                     {
                         state.Screenshots[handle] = screenshot;
+                        SafeNotify(() => _options.ScreenshotSink?.Invoke(run, screenshot));
                         Event(run, TaskEventLevel.Info, "UI 구조 정보가 부족해 창 스크린샷을 모델에 보냅니다(비전 지원 모델).");
                     }
                 }

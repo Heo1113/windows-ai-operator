@@ -23,12 +23,10 @@ public sealed partial class SettingsViewModel : PageViewModel
         _host = host;
         _isTaskRunning = isTaskRunning;
         LogLevels = [new("자세히(Debug)", LogLevel.Debug), new("보통(Info)", LogLevel.Info), new("경고 이상", LogLevel.Warning), new("오류만", LogLevel.Error)];
-        Themes = [new("어둡게", "Dark"), new("밝게", "Light"), new("Windows 설정 따름", "System")];
         Load();
     }
 
     public IReadOnlyList<Option<LogLevel>> LogLevels { get; }
-    public IReadOnlyList<Option<string>> Themes { get; }
     public ObservableCollection<BackupInfo> Backups { get; } = [];
     public string DataFolder => _context.Paths.DataDirectory;
     public string DataMode => _context.Paths.IsPortable ? "포터블 모드(실행 파일 옆 data 폴더)" : "사용자 폴더";
@@ -49,9 +47,6 @@ public sealed partial class SettingsViewModel : PageViewModel
 
     [ObservableProperty]
     public partial Option<LogLevel>? SelectedLogLevel { get; set; }
-
-    [ObservableProperty]
-    public partial Option<string>? SelectedTheme { get; set; }
 
     [ObservableProperty]
     public partial double FontScale { get; set; }
@@ -76,7 +71,6 @@ public sealed partial class SettingsViewModel : PageViewModel
         HistoryRetentionDays = g.HistoryRetentionDays;
         AutoBackupDays = g.AutoBackupDays;
         SelectedLogLevel = LogLevels.FirstOrDefault(l => l.Value == g.LogLevel) ?? LogLevels[1];
-        SelectedTheme = Themes.FirstOrDefault(t => t.Value == g.Theme) ?? Themes[0];
         FontScale = g.FontScale;
         RefreshBackups();
         RefreshStatus();
@@ -97,7 +91,7 @@ public sealed partial class SettingsViewModel : PageViewModel
         g.HistoryRetentionDays = HistoryRetentionDays;
         g.AutoBackupDays = AutoBackupDays;
         g.LogLevel = SelectedLogLevel?.Value ?? LogLevel.Info;
-        g.Theme = SelectedTheme?.Value ?? "Dark";
+        g.Theme = "Dark";
         g.FontScale = FontScale;
         var notes = _context.SaveSettings();
         _host.ApplyFontScale(g.FontScale);

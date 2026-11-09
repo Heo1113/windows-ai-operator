@@ -330,4 +330,7 @@ public sealed record ExecutorOptions
 
     /// <summary>Pause the task when a window of a program outside the allow list comes to the front.</summary>
     public bool PauseOnUnexpectedWindow { get; init; } = true;
+
+    /// <summary>Receives screenshots taken for the vision fallback (only set when the user turned saving on).</summary>
+    public Action<TaskRun, ScreenImage>? ScreenshotSink { get; init; }
 }

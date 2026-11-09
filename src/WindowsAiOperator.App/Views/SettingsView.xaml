@@ -15,8 +15,7 @@
         <Border Style="{StaticResource Card}">
           <StackPanel>
             <TextBlock Text="일반" Style="{StaticResource SectionTitle}" />
-            <TextBlock Text="테마" Style="{StaticResource FieldLabel}" />
-            <ComboBox ItemsSource="{Binding Themes}" SelectedItem="{Binding SelectedTheme}" DisplayMemberPath="Label" />
+            <TextBlock Text="테마: 어두운 테마(Windows 11 Fluent 다크)" Style="{StaticResource FieldLabel}" />
             <TextBlock Style="{StaticResource FieldLabel}">
               <Run Text="글자·화면 크기 배율 " /><Run Text="{Binding FontScale, StringFormat=0.00, Mode=OneWay}" /><Run Text=" (Windows 배율 175% 등에 추가로 적용)" />
             </TextBlock>

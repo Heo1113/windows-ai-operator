@@ -52,6 +52,7 @@
             <TextBlock Text="{Binding Detail.Report, StringFormat=결과 보고: {0}}" Style="{StaticResource Value}" Visibility="{Binding Detail.Report, Converter={StaticResource NotEmptyToVisibility}}" />
             <TextBlock Text="{Binding Detail.LastKnownState, StringFormat=마지막으로 확인한 상태: {0}}" Style="{StaticResource Caption}"
                        Visibility="{Binding Detail.LastKnownState, Converter={StaticResource NotEmptyToVisibility}}" />
+            <TextBlock Text="{Binding Timing}" Style="{StaticResource Caption}" />
             <TextBlock Text="{Binding Detail.Summary.ModelLabel, StringFormat=계획: {0}}" Style="{StaticResource Caption}" />
             <WrapPanel Margin="0,8,0,0">
               <Button Content="같은 요청으로 다시 실행(작업 화면에 채우기)" Command="{Binding RunAgainCommand}" Style="{StaticResource ToolButton}" />

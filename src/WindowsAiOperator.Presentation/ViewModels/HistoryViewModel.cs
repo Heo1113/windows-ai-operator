@@ -101,6 +101,9 @@ public sealed partial class HistoryViewModel : PageViewModel
     [ObservableProperty]
     public partial string? Breakdown { get; set; }
 
+    [ObservableProperty]
+    public partial string? Timing { get; set; }
+
     public override void OnNavigatedTo() => Refresh();
 
     partial void OnSelectedStatusChanged(Option<string?> value) => Refresh();
@@ -133,6 +136,7 @@ public sealed partial class HistoryViewModel : PageViewModel
         Events.Clear();
         Detail = value is null ? null : _context.Store.GetTask(value.Summary.Id);
         Breakdown = null;
+        Timing = null;
         if (Detail is null)
         {
             return;
@@ -153,6 +157,11 @@ public sealed partial class HistoryViewModel : PageViewModel
         var notRun = Detail.Steps.Count(s => s.Status is nameof(StepRunStatus.Skipped) or nameof(StepRunStatus.Cancelled) or nameof(StepRunStatus.Pending));
         var failed = Detail.Steps.Count(s => s.Status is nameof(StepRunStatus.Failed) or nameof(StepRunStatus.Denied));
         Breakdown = $"실행된 변경 {performed}개 · 실행 여부 불확실 {uncertain}개 · 실패·거부 {failed}개 · 실행하지 않은 단계 {notRun}개";
+        var started = Detail.StartedAt ?? Detail.Summary.CreatedAt;
+        var ended = Detail.Summary.EndedAt;
+        Timing = $"작업 ID {Detail.Summary.Id} · 시작 {started.LocalDateTime:yyyy-MM-dd HH:mm:ss}" +
+                 (ended is { } end ? $" · 종료 {end.LocalDateTime:HH:mm:ss} ({(end - started).TotalSeconds:0.0}초)" : " · 종료 기록 없음") +
+                 $" · 계획 {Detail.Rounds}회 · 모델 호출 {Detail.Summary.ModelCalls}회(오류 {Detail.ModelErrors}) · 승인 {Detail.ApprovalsGranted}/{Detail.Summary.ApprovalsRequested}";
     }
 
     private bool HasSelection() => Selected is not null;
