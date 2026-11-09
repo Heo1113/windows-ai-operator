@@ -2,6 +2,8 @@
   <Folder Name="/src/">
     <Project Path="src/WindowsAiOperator.Core/WindowsAiOperator.Core.csproj" />
     <Project Path="src/WindowsAiOperator.ModelProviders/WindowsAiOperator.ModelProviders.csproj" />
+    <Project Path="src/WindowsAiOperator.Storage/WindowsAiOperator.Storage.csproj" />
+    <Project Path="src/WindowsAiOperator.Automation.Windows/WindowsAiOperator.Automation.Windows.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/WindowsAiOperator.Tests/WindowsAiOperator.Tests.csproj" />
