@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/WindowsAiOperator.Core/WindowsAiOperator.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/WindowsAiOperator.Tests/WindowsAiOperator.Tests.csproj" />
+  </Folder>
+</Solution>
